@@ -2,8 +2,7 @@ version: '3'
 
 services:
     web:
-        image: golang:alpine
-        build: .
+        image: golang:1.17-stretch
         container_name: app
         volumes:
             - .:/home/application/current
