@@ -22,5 +22,15 @@ func main() {
 
 	r.POST("/v1/user/login", controllers.Login)
 
+	admin := r.Group("/v1/admin")
+	admin.Use(models.JwtVerify())
+	{
+		admin.GET("/user", controllers.ShowUser)
+		admin.GET("/users", controllers.ListUsers)
+		admin.POST("/user", controllers.CreateUser)
+		admin.PUT("/user/:id", controllers.UpdateUser)
+		admin.PUT("/user/:id/password", controllers.UpdatePassword)
+	}
+
 	r.Run(":" + os.Getenv("PORT"))
 }

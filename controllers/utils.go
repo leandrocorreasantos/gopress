@@ -11,6 +11,8 @@ func init() {
 	log.SetFlags(3)
 }
 
+var FormatDate = "2006-01-02"
+
 func render(c *gin.Context, data gin.H) {
 	status := http.StatusOK
 	response := gin.H{
