@@ -25,11 +25,17 @@ func main() {
 	admin := r.Group("/v1/admin")
 	admin.Use(models.JwtVerify())
 	{
+		// user
 		admin.GET("/user", controllers.ShowUser)
 		admin.GET("/users", controllers.ListUsers)
 		admin.POST("/user", controllers.CreateUser)
 		admin.PUT("/user/:id", controllers.UpdateUser)
 		admin.PUT("/user/:id/password", controllers.UpdatePassword)
+		// social media
+		admin.GET("/socialmedia", controllers.ListSocialMedia)
+		admin.POST("/socialmedia", controllers.CreateSocialMedia)
+		admin.PUT("/socialmedia/:id", controllers.UpdateSocialMedia)
+		admin.DELETE("/socialmedia/:id", controllers.DeleteSocialMedia)
 	}
 
 	r.Run(":" + os.Getenv("PORT"))
