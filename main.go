@@ -26,13 +26,15 @@ func main() {
 	admin.Use(models.JwtVerify())
 	{
 		// user
-		admin.GET("/user", controllers.ShowUser)
-		admin.GET("/users", controllers.ListUsers)
+		admin.GET("/user", controllers.ShowUser)    // logged user
+		admin.GET("/users", controllers.ListUsers)  // all users
+		admin.GET("/user/:id", controllers.GetUser) // one user
 		admin.POST("/user", controllers.CreateUser)
 		admin.PUT("/user/:id", controllers.UpdateUser)
 		admin.PUT("/user/:id/password", controllers.UpdatePassword)
 		// social media
 		admin.GET("/socialmedia", controllers.ListSocialMedia)
+		admin.GET("/socialmedia/:id", controllers.GetSocialMedia)
 		admin.POST("/socialmedia", controllers.CreateSocialMedia)
 		admin.PUT("/socialmedia/:id", controllers.UpdateSocialMedia)
 		admin.DELETE("/socialmedia/:id", controllers.DeleteSocialMedia)

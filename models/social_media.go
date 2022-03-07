@@ -8,7 +8,6 @@ type SocialMedia struct {
 }
 
 type SocialMediaProfile struct {
-	ID            uint        `json:"id"`
 	User          User        `json:"user"`
 	UserID        uint        `json:"user_id"`
 	SocialMedia   SocialMedia `json:"social_media"`

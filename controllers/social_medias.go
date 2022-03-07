@@ -20,6 +20,19 @@ func ListSocialMedia(c *gin.Context) {
 	render(c, gin.H{"social_medias": socialmedias})
 }
 
+func GetSocialMedia(c *gin.Context) {
+	var social_media models.SocialMedia
+	db := models.DB
+	id := c.Param("id")
+
+	if err := db.Where("id = ?", id).First(&social_media).Error; err != nil {
+		renderError(c, http.StatusNotFound, err)
+		return
+	}
+
+	render(c, gin.H{"social_media": social_media})
+}
+
 func CreateSocialMedia(c *gin.Context) {
 	db := models.DB
 	var socialmedia models.SocialMedia
