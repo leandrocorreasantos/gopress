@@ -10,4 +10,7 @@ require (
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )
 
-require golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4 // indirect
+require (
+	4d63.com/gochecknoglobals v0.1.0 // indirect
+	golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4 // indirect
+)
