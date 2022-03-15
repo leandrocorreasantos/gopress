@@ -93,6 +93,19 @@ func ShowUser(c *gin.Context) {
 	render(c, gin.H{"user": user})
 }
 
+func GetUser(c *gin.Context) {
+	db := models.DB
+	var user models.User
+	id := c.Param("id")
+
+	if err := db.Preload("SocialMedia").Where("id = ?", id).First(&user).Error; err != nil {
+		renderError(c, http.StatusNotFound, err)
+		return
+	}
+
+	render(c, gin.H{"user": user})
+}
+
 func ListUsers(c *gin.Context) {
 	db := models.DB
 	var users []models.User

@@ -17,15 +17,16 @@ const (
 
 type User struct {
 	gorm.Model
-	Username  string   `gorm:"size:100;not null;unique" json:"username"`
-	Password  string   `gorm:"size:100;not null" json:"-"`
-	Email     string   `gorm:"size:255;not null;unique" json:"email"`
-	Active    bool     `gorm:"default:true" json:"active"`
-	FirstName string   `gorm:"size:100" json:"first_name"`
-	LastName  string   `gorm:"size:100" json:"last_name"`
-	Birthday  string   `gorm:"type:date" json:"birthday"`
-	Biography string   `gorm:"type:text" json:"biography"`
-	Role      UserRole `gorm:"not null;default:'reader'" json:"role"`
+	Username     string         `gorm:"size:100;not null;unique" json:"username"`
+	Password     string         `gorm:"size:100;not null" json:"-"`
+	Email        string         `gorm:"size:255;not null;unique" json:"email"`
+	Active       bool           `gorm:"default:true" json:"active"`
+	FirstName    string         `gorm:"size:100" json:"first_name"`
+	LastName     string         `gorm:"size:100" json:"last_name"`
+	Birthday     string         `gorm:"type:date" json:"birthday"`
+	Biography    string         `gorm:"type:text" json:"biography"`
+	Role         UserRole       `gorm:"not null;default:'reader'" json:"role"`
+	Socialmedias []*SocialMedia `gorm:"many2many:social_media_profiles" json:"social_medias"`
 }
 
 type Login struct {
