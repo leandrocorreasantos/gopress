@@ -10,9 +10,10 @@ import (
 func ListSocialMediaProfile(c *gin.Context) {
 	var socialmediaprofiles []models.SocialMediaProfile
 	db := models.DB
-	user_id := c.Param("user_id")
+	id := c.Param("user_id")
 
-	if err := db.Where("user_id = ?", user_id).Find(&socialmediaprofiles).Error; err != nil {
+	db = db.Where("user_id = ?", id)
+	if err := db.Find(&socialmediaprofiles).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
@@ -27,7 +28,9 @@ func GetSocialMediaProfile(c *gin.Context) {
 	social_media_id := c.Param("social_media_id")
 
 	conditions := "user_id = ? and social_media_id = ?"
-	if err := db.Where(conditions, user_id, social_media_id).Find(&socialmediaprofile).Error; err != nil {
+	db = db.Preload("User").Preload("SocialMedia")
+	db = db.Where(conditions, user_id, social_media_id)
+	if err := db.Find(&socialmediaprofile).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
@@ -44,10 +47,7 @@ func CreateSocialMediaProfile(c *gin.Context) {
 		return
 	}
 
-	if err := db.Create(&socialmediaprofile).Error; err != nil {
-		renderError(c, http.StatusInternalServerError, err)
-		return
-	}
+	db.NewRecord(socialmediaprofile)
 
 	render(c, gin.H{})
 }
@@ -55,11 +55,10 @@ func CreateSocialMediaProfile(c *gin.Context) {
 func UpdateSocialMediaProfile(c *gin.Context) {
 	var socialmediaprofile models.SocialMediaProfile
 	db := models.DB
-	user_id := c.Param("user_id")
-	social_media_id := c.Param("social_media_id")
+	id := c.Param("id")
 
-	conditions := "user_id = ? and social_media_id = ?"
-	if err := db.Where(conditions, user_id, social_media_id).Find(&socialmediaprofile).Error; err != nil {
+	conditions := "id = ?"
+	if err := db.Where(conditions, id).Find(&socialmediaprofile).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
@@ -80,16 +79,17 @@ func UpdateSocialMediaProfile(c *gin.Context) {
 func DeleteSocialMediaProfile(c *gin.Context) {
 	var socialmediaprofile models.SocialMediaProfile
 	db := models.DB
-	user_id := c.Param("user_id")
-	social_media_id := c.Param("social_media_id")
+	id := c.Param("id")
 
-	conditions := "user_id = ? and social_media_id = ?"
-	if err := db.Where(conditions, user_id, social_media_id).Find(&socialmediaprofile).Error; err != nil {
+	conditions := "id = ?"
+	db = db.Where(conditions, id)
+	if err := db.Find(&socialmediaprofile).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
 
-	if err := db.Where(conditions, user_id, social_media_id).Delete(&socialmediaprofile).Error; err != nil {
+	db = db.Where(conditions, id)
+	if err := db.Delete(&socialmediaprofile).Error; err != nil {
 		renderError(c, http.StatusInternalServerError, err)
 		return
 	}

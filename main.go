@@ -39,11 +39,11 @@ func main() {
 		admin.PUT("/socialmedia/:id", controllers.UpdateSocialMedia)
 		admin.DELETE("/socialmedia/:id", controllers.DeleteSocialMedia)
 		// social media profile
-		admin.GET("/socialmediaprofile", controllers.ListSocialMediaProfile)
+		admin.GET("/socialmediaprofile/:user_id", controllers.ListSocialMediaProfile)
 		admin.GET("/socialmediaprofile/:user_id/:social_media_id", controllers.GetSocialMediaProfile)
 		admin.POST("/socialmediaprofile", controllers.CreateSocialMediaProfile)
-		admin.PUT("/socialmediaprofile/:user_id/:social_media_id", controllers.UpdateSocialMediaProfile)
-		admin.DELETE("/socialmediaprofile/:user_id/:social_media_id", controllers.DeleteSocialMediaProfile)
+		admin.PUT("/socialmediaprofile/:id", controllers.UpdateSocialMediaProfile)
+		admin.DELETE("/socialmediaprofile/:id", controllers.DeleteSocialMediaProfile)
 	}
 
 	r.Run(":" + os.Getenv("PORT"))

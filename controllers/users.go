@@ -98,7 +98,7 @@ func GetUser(c *gin.Context) {
 	var user models.User
 	id := c.Param("id")
 
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+	if err := db.Preload("SocialMedia").Where("id = ?", id).First(&user).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
