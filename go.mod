@@ -10,4 +10,8 @@ require (
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )
 
-require golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4 // indirect
+require (
+	github.com/alecthomas/gocyclo v0.0.0-20150208221726-aa8f8b160214 // indirect
+	github.com/mdempsky/unconvert v0.0.0-20200228143138-95ecdbfc0b5f // indirect
+	golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4 // indirect
+)
