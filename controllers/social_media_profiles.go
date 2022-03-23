@@ -49,7 +49,7 @@ func CreateSocialMediaProfile(c *gin.Context) {
 
 	db.NewRecord(socialmediaprofile)
 
-	render(c, gin.H{})
+	renderCreate(c, gin.H{})
 }
 
 func UpdateSocialMediaProfile(c *gin.Context) {

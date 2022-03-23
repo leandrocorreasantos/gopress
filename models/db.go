@@ -46,6 +46,8 @@ func ConnectDB() {
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&SocialMedia{})
 	db.AutoMigrate(&SocialMediaProfile{})
+	db.AutoMigrate(&Category{})
+	db.AutoMigrate(&Article{})
 
 	// create super User
 	var superuser User
@@ -60,6 +62,7 @@ func ConnectDB() {
 		superuser.Password = password
 		superuser.Active = true
 		superuser.Role = "admin"
+		superuser.Birthday = "1970-01-01"
 		if err := db.Create(&superuser).Error; err != nil {
 			log.Println("Error creating super user: ", err.Error())
 			return

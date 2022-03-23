@@ -132,7 +132,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	render(c, gin.H{})
+	renderCreate(c, gin.H{})
 }
 
 func UpdateUser(c *gin.Context) {

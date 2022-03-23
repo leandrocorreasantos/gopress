@@ -44,6 +44,19 @@ func main() {
 		admin.POST("/socialmediaprofile", controllers.CreateSocialMediaProfile)
 		admin.PUT("/socialmediaprofile/:id", controllers.UpdateSocialMediaProfile)
 		admin.DELETE("/socialmediaprofile/:id", controllers.DeleteSocialMediaProfile)
+		// category
+		admin.GET("/category", controllers.ListCategories)
+		admin.GET("/category/:id", controllers.GetCategory)
+		admin.POST("/category", controllers.CreateCategory)
+		admin.PUT("/category/:id", controllers.UpdateCategory)
+		admin.DELETE("/category/:id", controllers.DeleteCategory)
+		// articles
+		admin.GET("/articles", controllers.ListArticles)
+		admin.GET("/article/:id", controllers.GetArticle)
+		admin.POST("/article", controllers.CreateArticle)
+		admin.PUT("/article/:id", controllers.UpdateArticle)
+		admin.DELETE("/article/:id", controllers.DeleteArticle)
+
 	}
 
 	r.Run(":" + os.Getenv("PORT"))

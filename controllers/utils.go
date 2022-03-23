@@ -11,6 +11,28 @@ func init() {
 	log.SetFlags(3)
 }
 
+type Paginate struct {
+	Offset   int
+	PageSize int
+	Page     int
+}
+
+func CalculateOffset(page, pageSize int) Paginate {
+	if page == 0 {
+		page = 1
+	}
+
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 20
+	}
+	offset := (page - 1) * pageSize
+	return Paginate{offset, pageSize, page}
+}
+
+// rendering results
 func render(c *gin.Context, data gin.H) {
 	status := http.StatusOK
 	response := gin.H{
@@ -20,14 +42,22 @@ func render(c *gin.Context, data gin.H) {
 	c.JSON(status, response)
 }
 
-func renderList(c *gin.Context, data gin.H, page int, offset int, total int) {
+func renderCreate(c *gin.Context, data gin.H) {
+	status := http.StatusCreated
+	response := gin.H{
+		"status": status,
+		"data":   data,
+	}
+	c.JSON(status, response)
+}
+
+func renderList(c *gin.Context, data gin.H, page int, offset int) {
 	status := http.StatusOK
 
 	response := gin.H{
 		"status": status,
 		"page":   page,
 		"offset": offset,
-		"total":  total,
 		"data":   data,
 	}
 	c.JSON(status, response)

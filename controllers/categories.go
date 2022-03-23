@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"app/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,9 +10,15 @@ import (
 
 func ListCategories(c *gin.Context) {
 	var categories []models.Category
-
 	db := models.DB
 
+	// filter by name
+	if name := c.DefaultQuery("name", ""); name != "" {
+		name = fmt.Sprintf("%%%s%%", name)
+		db = db.Where("name ilike ?", name)
+	}
+
+	// find categories
 	if err := db.Find(&categories).Error; err != nil {
 		renderError(c, http.StatusBadRequest, err)
 		return
@@ -48,7 +55,7 @@ func CreateCategory(c *gin.Context) {
 		return
 	}
 
-	render(c, gin.H{})
+	renderCreate(c, gin.H{})
 }
 
 func UpdateCategory(c *gin.Context) {
