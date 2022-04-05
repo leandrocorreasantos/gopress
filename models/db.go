@@ -44,10 +44,10 @@ func ConnectDB() {
 
 	// migrations
 	db.AutoMigrate(&User{})
-	db.AutoMigrate(&SocialMedia{})
-	db.AutoMigrate(&SocialMediaProfile{})
-	db.AutoMigrate(&Category{})
-	db.AutoMigrate(&Article{})
+	db.AutoMigrate(&SocialMedia{}, &SocialMediaProfile{})
+	db.AutoMigrate(&Category{}, &Article{})
+	db.AutoMigrate(&Tag{})
+	db.AutoMigrate(&MetaTag{}, &ArticleMetaTag{})
 
 	// create super User
 	var superuser User

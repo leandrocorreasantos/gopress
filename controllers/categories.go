@@ -33,7 +33,9 @@ func GetCategory(c *gin.Context) {
 	db := models.DB
 	id := c.Param("id")
 
-	if err := db.Where("id = ?", id).First(&category).Error; err != nil {
+	db = db.Model(&models.Category{})
+
+	if err := db.First(&category, "ID = ?", id).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
@@ -63,7 +65,7 @@ func UpdateCategory(c *gin.Context) {
 	db := models.DB
 	id := c.Param("id")
 
-	if err := db.Where("id = ?", id).First(&category).Error; err != nil {
+	if err := db.Where("ID = ?", id).First(&category).Error; err != nil {
 		renderError(c, http.StatusBadRequest, err)
 		return
 	}
@@ -86,12 +88,14 @@ func DeleteCategory(c *gin.Context) {
 	var category models.Category
 	id := c.Param("id")
 
-	if err := db.Where("id = ?", id).First(&category).Error; err != nil {
+	db = db.Model(&models.Category{})
+
+	if err := db.First(&category, "ID= ?", id).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
 
-	if err := db.Where("id = ?", id).Delete(&category).Error; err != nil {
+	if err := db.Where("ID= ?", id).Delete(&category).Error; err != nil {
 		renderError(c, http.StatusInternalServerError, err)
 		return
 	}
