@@ -44,6 +44,38 @@ func main() {
 		admin.POST("/socialmediaprofile", controllers.CreateSocialMediaProfile)
 		admin.PUT("/socialmediaprofile/:id", controllers.UpdateSocialMediaProfile)
 		admin.DELETE("/socialmediaprofile/:id", controllers.DeleteSocialMediaProfile)
+		// category
+		admin.GET("/category", controllers.ListCategories)
+		admin.GET("/category/:id", controllers.GetCategory)
+		admin.POST("/category", controllers.CreateCategory)
+		admin.PUT("/category/:id", controllers.UpdateCategory)
+		admin.DELETE("/category/:id", controllers.DeleteCategory)
+		// articles
+		admin.GET("/articles", controllers.ListArticles)
+		admin.GET("/article/:id", controllers.GetArticle)
+		admin.POST("/article", controllers.CreateArticle)
+		admin.PUT("/article/:id", controllers.UpdateArticle)
+		admin.PATCH("/article/:id/draft", controllers.DraftArticle)
+		admin.PATCH("/article/:id/publish", controllers.PublishArticle)
+		admin.DELETE("/article/:id", controllers.DeleteArticle)
+		// tags
+		admin.GET("/tag", controllers.ListTag)
+		admin.GET("/tag/:id", controllers.GetTag)
+		admin.POST("/tag", controllers.CreateTag)
+		admin.PUT("/tag/:id", controllers.UpdateTag)
+		admin.DELETE("/tag/:id", controllers.DeleteTag)
+		// meta tags
+		admin.GET("/meta_tag", controllers.ListMetaTag)
+		admin.GET("/meta_tag/:id", controllers.GetMetaTag)
+		admin.POST("/meta_tag", controllers.CreateMetaTag)
+		admin.PUT("/meta_tag/:id", controllers.UpdateMetaTag)
+		admin.DELETE("/meta_tag/:id", controllers.DeleteMetaTag)
+		// article meta tags
+		admin.GET("/article_meta_tag", controllers.ListArticleMetaTag)
+		admin.GET("/article_meta_tag/:id", controllers.GetArticleMetaTag)
+		admin.POST("/article_meta_tag", controllers.CreateArticleMetaTag)
+		admin.PUT("/article_meta_tag/:id", controllers.UpdateArticleMetaTag)
+		admin.DELETE("/article_meta_tag/:id", controllers.DeleteArticleMetaTag)
 	}
 
 	r.Run(":" + os.Getenv("PORT"))

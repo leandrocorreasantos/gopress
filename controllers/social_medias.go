@@ -47,7 +47,7 @@ func CreateSocialMedia(c *gin.Context) {
 		return
 	}
 
-	render(c, gin.H{})
+	renderCreate(c, gin.H{})
 }
 
 func UpdateSocialMedia(c *gin.Context) {

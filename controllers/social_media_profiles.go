@@ -10,9 +10,11 @@ import (
 func ListSocialMediaProfile(c *gin.Context) {
 	var socialmediaprofiles []models.SocialMediaProfile
 	db := models.DB
-	id := c.Param("user_id")
+	user_id := c.Param("user_id")
 
-	db = db.Where("user_id = ?", id)
+	db = db.Model(&models.SocialMediaProfile{})
+
+	db = db.Where("user_id = ?", user_id).Preload("SocialMedia").Preload("User")
 	if err := db.Find(&socialmediaprofiles).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
@@ -47,9 +49,12 @@ func CreateSocialMediaProfile(c *gin.Context) {
 		return
 	}
 
-	db.NewRecord(socialmediaprofile)
+	if err := db.Save(&socialmediaprofile).Error; err != nil {
+		renderError(c, http.StatusBadRequest, err)
+		return
+	}
 
-	render(c, gin.H{})
+	renderCreate(c, gin.H{})
 }
 
 func UpdateSocialMediaProfile(c *gin.Context) {
@@ -57,8 +62,7 @@ func UpdateSocialMediaProfile(c *gin.Context) {
 	db := models.DB
 	id := c.Param("id")
 
-	conditions := "id = ?"
-	if err := db.Where(conditions, id).Find(&socialmediaprofile).Error; err != nil {
+	if err := db.Find(&socialmediaprofile, "id = ?", id).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
@@ -81,14 +85,12 @@ func DeleteSocialMediaProfile(c *gin.Context) {
 	db := models.DB
 	id := c.Param("id")
 
-	conditions := "id = ?"
-	db = db.Where(conditions, id)
-	if err := db.Find(&socialmediaprofile).Error; err != nil {
+	if err := db.Find(&socialmediaprofile, "id = ?", id).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
 
-	db = db.Where(conditions, id)
+	db = db.Where("id = ?", id)
 	if err := db.Delete(&socialmediaprofile).Error; err != nil {
 		renderError(c, http.StatusInternalServerError, err)
 		return
