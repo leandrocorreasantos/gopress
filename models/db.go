@@ -48,6 +48,7 @@ func ConnectDB() {
 	db.AutoMigrate(&Category{}, &Article{})
 	db.AutoMigrate(&Tag{})
 	db.AutoMigrate(&MetaTag{}, &ArticleMetaTag{})
+    db.AutoMigrate(&Media{})
 
 	// create super User
 	var superuser User

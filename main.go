@@ -76,6 +76,8 @@ func main() {
 		admin.POST("/article_meta_tag", controllers.CreateArticleMetaTag)
 		admin.PUT("/article_meta_tag/:id", controllers.UpdateArticleMetaTag)
 		admin.DELETE("/article_meta_tag/:id", controllers.DeleteArticleMetaTag)
+		// upload media
+		admin.POST("/media/upload", controllers.UploadMedia)
 	}
 
 	r.Run(":" + os.Getenv("PORT"))
