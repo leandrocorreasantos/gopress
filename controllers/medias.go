@@ -23,13 +23,14 @@ func UploadMedia(c *gin.Context) {
 
 	bucket_name := os.Getenv("bucket_name")
 	bucket_address := os.Getenv("bucket_address")
+	google_credentials := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
 	var err error
 
 	ctx := appengine.NewContext(c.Request)
 
 	storageClient, err := storage.NewClient(ctx,
-		option.WithCredentialsFile("keys.json"),
+		option.WithCredentialsFile(google_credentials),
 	)
 	if err != nil {
 		renderError(c, http.StatusInternalServerError, err)
@@ -70,6 +71,8 @@ func UploadMedia(c *gin.Context) {
 
 	media.FileName = sw.Attrs().Name
 	media.FileSrc = fmt.Sprintf("%s%s", bucket_address, u.EscapedPath())
+	media.FileSize = sw.Attrs().Size
+	media.MimeType = sw.Attrs().ContentType
 	media.Title = sw.Attrs().Name
 
 	if err := db.Create(&media).Error; err != nil {
