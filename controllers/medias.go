@@ -9,9 +9,11 @@ import (
 	"google.golang.org/api/option"
 	"google.golang.org/appengine"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 )
 
 var (
@@ -81,6 +83,106 @@ func UploadMedia(c *gin.Context) {
 	}
 
 	render(c, gin.H{"media": media})
+}
 
-	// render(c, gin.H{"filename": sw.Attrs().Name, "filesrc": u.EscapedPath()})
+func ListMedia(c *gin.Context) {
+	db := models.DB
+	var medias []models.Media
+
+	db = db.Model(&models.Media{})
+
+	// filter by title
+	if title := c.Query("title"); title != "" {
+		title = fmt.Sprintf("%%%s%%", title)
+		db = db.Where("title ilike ?", title)
+	}
+
+	// pagination
+	page, _ := strconv.Atoi(c.Query("page"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
+	p := CalculateOffset(page, pageSize)
+	db = db.Limit(p.PageSize).Offset(p.Offset)
+
+	if err := db.Find(&medias).Error; err != nil {
+		renderError(c, http.StatusBadRequest, err)
+		return
+	}
+
+	renderList(c, gin.H{"medias": medias}, p.Page, p.Offset)
+}
+
+func GetMedia(c *gin.Context) {
+	db := models.DB
+	id := c.Param("id")
+	var media models.Media
+
+	db = db.Model(&models.Media{})
+
+	if err := db.Find(&media, "id = ?", id).Error; err != nil {
+		renderError(c, http.StatusNotFound, err)
+		return
+	}
+
+	render(c, gin.H{"media": media})
+}
+
+func DeleteMedia(c *gin.Context) {
+	db := models.DB
+	var media models.Media
+	db = db.Model(&models.Media{})
+	id := c.Param("id")
+	var err error
+
+	bucket_name := os.Getenv("bucket_name")
+	// bucket_address := os.Getenv("bucket_address")
+	google_credentials := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+	ctx := appengine.NewContext(c.Request)
+
+	storageClient, err := storage.NewClient(ctx,
+		option.WithCredentialsFile(google_credentials),
+	)
+	if err != nil {
+		renderError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	// get data from database
+	if err = db.Find(&media, "id = ?", id).Error; err != nil {
+		renderError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	// get object name
+	object_name := media.FileName
+
+	// if success, delete object from bucket
+	obj := storageClient.Bucket(bucket_name).Object(object_name)
+	log.Printf("object: %s", obj)
+	attrs, err := obj.Attrs(ctx)
+	log.Printf("Attrs: %s", attrs)
+
+	if err != nil {
+		renderError(c, http.StatusBadRequest, err)
+		return
+	}
+
+	obj = obj.If(storage.Conditions{GenerationMatch: attrs.Generation})
+
+	log.Printf("object: %s", obj)
+
+	if err = obj.Delete(ctx); err != nil {
+		renderError(c, http.StatusBadRequest, err)
+		return
+	}
+
+	// delete from database
+	if err = db.Delete(&media, "id = ?", id).Error; err != nil {
+		renderError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	// return empty object
+	render(c, gin.H{})
+
 }

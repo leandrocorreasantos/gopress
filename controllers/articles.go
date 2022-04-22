@@ -70,7 +70,7 @@ func ListArticles(c *gin.Context) {
 	db = db.Limit(p.PageSize).Offset(p.Offset)
 
 	// find results
-	if err := db.Debug().Find(&articles).Error; err != nil {
+	if err := db.Find(&articles).Error; err != nil {
 		renderError(c, http.StatusBadRequest, err)
 		return
 	}
