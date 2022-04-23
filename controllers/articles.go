@@ -19,7 +19,7 @@ func ListArticles(c *gin.Context) {
 	db = db.Model(&models.Article{})
 	// include other models
 	db = db.Preload("User").Preload("Category").Preload("Tags")
-	db = db.Preload("MetaTags").Preload("MetaTags.MetaTag")
+	db = db.Preload("MetaTags").Preload("MetaTags.MetaTag").Preload("Media")
 
 	// filter by date_published
 	date_published_end, err := time.Parse(
@@ -70,7 +70,7 @@ func ListArticles(c *gin.Context) {
 	db = db.Limit(p.PageSize).Offset(p.Offset)
 
 	// find results
-	if err := db.Debug().Find(&articles).Error; err != nil {
+	if err := db.Find(&articles).Error; err != nil {
 		renderError(c, http.StatusBadRequest, err)
 		return
 	}
@@ -85,9 +85,9 @@ func GetArticle(c *gin.Context) {
 
 	db = db.Model(&models.Article{})
 	db = db.Preload("User").Preload("Category").Preload("Tags")
-	db = db.Preload("MetaTags").Preload("MetaTags.MetaTag")
+	db = db.Preload("MetaTags").Preload("MetaTags.MetaTag").Preload("Media")
 
-	if err := db.Debug().Where("ID= ?", id).Find(&article).Error; err != nil {
+	if err := db.Where("ID= ?", id).Find(&article).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
@@ -209,7 +209,9 @@ func ListPublishedArticles(c *gin.Context) {
 	db := models.DB
 
 	db = db.Model(&models.Article{})
-	db = db.Preload("User").Preload("User.Socialmedias").Preload("Category")
+
+	db = db.Preload("User").Preload("Category").Preload("Tags")
+	db = db.Preload("MetaTags").Preload("MetaTags.MetaTag").Preload("Media")
 
 	// filter by date_published
 	date_published_end, err := time.Parse(
@@ -269,6 +271,9 @@ func GetPublishedArticle(c *gin.Context) {
 	slug := c.Param("slug")
 
 	db = db.Model(&models.Article{})
+
+	db = db.Preload("User").Preload("Category").Preload("Tags")
+	db = db.Preload("MetaTags").Preload("MetaTags.MetaTag").Preload("Media")
 
 	if err := db.First(&article, "Slug= ?", slug).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)

@@ -64,6 +64,7 @@ func renderList(c *gin.Context, data gin.H, page int, offset int) {
 }
 
 func renderError(c *gin.Context, status int, err error) {
-	response := gin.H{"code": status, "error": err}
+    log.Printf("Erro %d: %s", status, err.Error())
+	response := gin.H{"code": status, "error": err.Error()}
 	c.JSON(status, response)
 }

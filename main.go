@@ -22,6 +22,10 @@ func main() {
 
 	r.POST("/v1/user/login", controllers.Login)
 
+	// articles
+	r.GET("/articles", controllers.ListPublishedArticles)
+	r.GET("/articles/:slug", controllers.GetPublishedArticle)
+
 	admin := r.Group("/v1/admin")
 	admin.Use(models.JwtVerify())
 	{
@@ -76,6 +80,11 @@ func main() {
 		admin.POST("/article_meta_tag", controllers.CreateArticleMetaTag)
 		admin.PUT("/article_meta_tag/:id", controllers.UpdateArticleMetaTag)
 		admin.DELETE("/article_meta_tag/:id", controllers.DeleteArticleMetaTag)
+		// upload media
+		admin.GET("/media", controllers.ListMedia)
+		admin.GET("/media/:id", controllers.GetMedia)
+		admin.POST("/media/upload", controllers.UploadMedia)
+		admin.DELETE("/media/:id", controllers.DeleteMedia)
 	}
 
 	r.Run(":" + os.Getenv("PORT"))

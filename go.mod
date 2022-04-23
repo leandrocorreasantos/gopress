@@ -10,6 +10,10 @@ require (
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 )
 
-require golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
-
-require github.com/gosimple/slug v1.12.0
+require (
+	cloud.google.com/go/storage v1.22.0
+	github.com/gosimple/slug v1.12.0
+	google.golang.org/api v0.74.0
+	google.golang.org/appengine v1.6.7
+	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
+)

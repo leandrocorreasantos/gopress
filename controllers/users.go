@@ -85,7 +85,10 @@ func ShowUser(c *gin.Context) {
 		return
 	}
 
-	if err := db.Where("username = ?", claims.Username).First(&user).Error; err != nil {
+	db = db.Model(&models.User{}).Preload("SocialMediaProfile")
+	db = db.Preload("SocialMediaProfile.SocialMedia")
+
+	if err := db.First(&user, "username = ?", claims.Username).Error; err != nil {
 		renderError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -98,9 +101,10 @@ func GetUser(c *gin.Context) {
 	var user models.User
 	id := c.Param("id")
 
-	db = db.Model(&models.User{})
+	db = db.Model(&models.User{}).Preload("SocialMediaProfile")
+	db = db.Preload("SocialMediaProfile.SocialMedia")
 
-	if err := db.Debug().Preload("Socialmedias").Where("ID = ?", id).First(&user).Error; err != nil {
+	if err := db.Where("ID = ?", id).First(&user).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}
@@ -111,6 +115,9 @@ func GetUser(c *gin.Context) {
 func ListUsers(c *gin.Context) {
 	db := models.DB
 	var users []models.User
+
+	db = db.Model(&models.User{}).Preload("SocialMediaProfile")
+	db = db.Preload("SocialMediaProfile.SocialMedia")
 
 	err := db.Find(&users).Error
 	if err != nil {
