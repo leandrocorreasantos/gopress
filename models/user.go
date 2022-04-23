@@ -17,16 +17,16 @@ const (
 
 type User struct {
 	gorm.Model
-	Username     string         `gorm:"size:100;not null;unique" json:"username,omitempty"`
-	Password     string         `gorm:"size:100;not null" json:"-"`
-	Email        string         `gorm:"size:255;not null;unique" json:"email,omitempty"`
-	Active       bool           `gorm:"default:true" json:"active"`
-	FirstName    string         `gorm:"size:100" json:"first_name,omitempty"`
-	LastName     string         `gorm:"size:100" json:"last_name,omitempty"`
-	Birthday     string         `gorm:"type:date" json:"birthday,omitempty"`
-	Biography    string         `gorm:"type:text" json:"biography,omitempty"`
-	Role         UserRole       `gorm:"not null;default:'reader'" json:"role,omitempty"`
-	Socialmedias []*SocialMedia `gorm:"many2many:social_media_profiles" json:"social_medias,omitempty"`
+	Username           string                `gorm:"size:100;not null;unique" json:"username,omitempty"`
+	Password           string                `gorm:"size:100;not null" json:"-"`
+	Email              string                `gorm:"size:255;not null;unique" json:"email,omitempty"`
+	Active             bool                  `gorm:"default:true" json:"active"`
+	FirstName          string                `gorm:"size:100" json:"first_name,omitempty"`
+	LastName           string                `gorm:"size:100" json:"last_name,omitempty"`
+	Birthday           string                `gorm:"type:date" json:"birthday,omitempty"`
+	Biography          string                `gorm:"type:text" json:"biography,omitempty"`
+	Role               UserRole              `gorm:"not null;default:'reader'" json:"role,omitempty"`
+	SocialMediaProfile []*SocialMediaProfile `json:"social_media_profile,omitempty"`
 }
 
 type Login struct {

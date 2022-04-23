@@ -87,7 +87,7 @@ func GetArticle(c *gin.Context) {
 	db = db.Preload("User").Preload("Category").Preload("Tags")
 	db = db.Preload("MetaTags").Preload("MetaTags.MetaTag").Preload("Media")
 
-	if err := db.Debug().Where("ID= ?", id).Find(&article).Error; err != nil {
+	if err := db.Where("ID= ?", id).Find(&article).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
 	}

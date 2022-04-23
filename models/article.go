@@ -77,8 +77,8 @@ type Article struct {
 	DatePublished time.Time         `json:"date_published"`
 	Tags          []*Tag            `gorm:"many2many:articles_tags" json:"tags,omitempty"`
 	MetaTags      []*ArticleMetaTag `json:"meta_tags,omitempty"`
-	MediaID       *uint             `json:"media_id;omitempty"`
-	Media         *Media            `json:"media,omitempty"`
+	MediaID       uint              `json:"media_id,omitempty"`
+	Media         Media             `json:"media,omitempty"`
 }
 
 func (a *Article) BeforeSave() error {

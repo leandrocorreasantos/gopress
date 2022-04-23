@@ -13,8 +13,9 @@ func ListSocialMediaProfile(c *gin.Context) {
 	user_id := c.Param("user_id")
 
 	db = db.Model(&models.SocialMediaProfile{})
+    db = db.Preload("SocialMedia").Preload("User")
 
-	db = db.Where("user_id = ?", user_id).Preload("SocialMedia").Preload("User")
+	db = db.Where("user_id = ?", user_id)
 	if err := db.Find(&socialmediaprofiles).Error; err != nil {
 		renderError(c, http.StatusNotFound, err)
 		return
