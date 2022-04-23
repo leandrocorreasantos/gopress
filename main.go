@@ -22,6 +22,10 @@ func main() {
 
 	r.POST("/v1/user/login", controllers.Login)
 
+    // articles
+    r.GET("/articles", controllers.ListPublishedArticles)
+    r.GET("/articles/:slug", controllers.GetPublishedArticle)
+
 	admin := r.Group("/v1/admin")
 	admin.Use(models.JwtVerify())
 	{
