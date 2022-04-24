@@ -3,6 +3,7 @@ package controllers
 import (
 	"app/models"
 	"fmt"
+	// "log"
 	"net/http"
 	"strconv"
 	"time"
@@ -14,7 +15,11 @@ import (
 func ListArticles(c *gin.Context) {
 	time_layout := "2006-01-02"
 	var articles []models.Article
+	var category models.Category
+	var user models.User
 	db := models.DB
+
+	var err error
 
 	db = db.Model(&models.Article{})
 	// include other models
@@ -40,12 +45,26 @@ func ListArticles(c *gin.Context) {
 		)
 	}
 
-	// Category, User
-	if category_id := c.Query("category_id"); category_id != "" {
-		db = db.Where("category_id = ?", category_id)
+	// Category
+	if category_slug := c.Query("category"); category_slug != "" {
+		category_id, err := category.FindIdBySlug(category_slug)
+		if err != nil {
+			renderError(c, http.StatusNotFound, err)
+			return
+		} else {
+			db = db.Where("category_id = ?", category_id)
+		}
 	}
-	if user_id := c.Query("user_id"); user_id != "" {
-		db = db.Where("user_id = ?", user_id)
+
+	// User (Author)
+	if username := c.Query("author"); username != "" {
+		user_id, err := user.FindIdByUsername(username)
+		if err != nil {
+			renderError(c, http.StatusNotFound, err)
+			return
+		} else {
+			db = db.Where("user_id = ?", user_id)
+		}
 	}
 
 	// filter by is_draft
@@ -206,6 +225,8 @@ func PublishArticle(c *gin.Context) {
 func ListPublishedArticles(c *gin.Context) {
 	time_layout := "2006-01-02"
 	var articles []models.Article
+	var category models.Category
+	var user models.User
 	db := models.DB
 
 	db = db.Model(&models.Article{})
@@ -232,12 +253,26 @@ func ListPublishedArticles(c *gin.Context) {
 		)
 	}
 
-	// Category, User
-	if category_id := c.Query("category_id"); category_id != "" {
-		db = db.Where("category_id = ?", category_id)
+	// Category
+	if category_slug := c.Query("category"); category_slug != "" {
+		category_id, err := category.FindIdBySlug(category_slug)
+		if err != nil {
+			renderError(c, http.StatusNotFound, err)
+			return
+		} else {
+			db = db.Where("category_id = ?", category_id)
+		}
 	}
-	if user_id := c.Query("user_id"); user_id != "" {
-		db = db.Where("user_id = ?", user_id)
+
+	// User (Author)
+	if username := c.Query("author"); username != "" {
+		user_id, err := user.FindIdByUsername(username)
+		if err != nil {
+			renderError(c, http.StatusNotFound, err)
+			return
+		} else {
+			db = db.Where("user_id = ?", user_id)
+		}
 	}
 
 	// filter by title
