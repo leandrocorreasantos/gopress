@@ -58,6 +58,24 @@ func (u *User) BeforeSave() error {
 	return nil
 }
 
+func (u *User) FindIdByUsername(username string) (id interface{}, err error) {
+	db := DB
+	if err := db.Find(&u, "username = ?", username).Error; err != nil {
+		return nil, err
+	}
+
+	return u.ID, nil
+}
+
+func (u *User) findUsernameById(id uint) (username interface{}, err error) {
+	db := DB
+	if err := db.Find(&u, "ID = ?", id).Error; err != nil {
+		return nil, err
+	}
+
+	return u.Username, nil
+}
+
 func HashPassword(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 }
