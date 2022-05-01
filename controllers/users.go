@@ -41,12 +41,14 @@ func Login(c *gin.Context) {
 	// expiration time
 	iat := time.Now().Unix()
 	exp := time.Now().Add(time.Hour * 24).Unix()
+        aud := os.Getenv("JWTAudience")
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"username": user.Username,
 		"role":     user.Role,
 		"iat":      iat,
 		"exp":      exp,
+                "aud":      aud,
 	})
 
 	secretKey := os.Getenv("secretKey")
