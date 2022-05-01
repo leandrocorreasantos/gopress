@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -13,22 +12,9 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
-	dbuser := os.Getenv("databaseUser")
-	dbpass := os.Getenv("databasePass")
-	dbname := os.Getenv("databaesName")
-	dbhost := os.Getenv("databaseHost")
 	dbdriver := os.Getenv("databaseDriver")
 
-	log.Printf("%s://%s:%s@%s/%s?sslmode=disable",
-		dbdriver, dbuser, dbpass, dbhost, dbname)
-
-	dbURI := fmt.Sprintf("%s://%s:%s@%s/%s?sslmode=disable",
-		dbdriver,
-		dbuser,
-		dbpass,
-		dbhost,
-		dbname,
-	)
+	dbURI := os.Getenv("DATABASE_URL")
 
 	db, err := gorm.Open(dbdriver, dbURI)
 
